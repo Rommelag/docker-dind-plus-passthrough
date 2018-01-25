@@ -13,7 +13,6 @@ RUN mkdir -p /go/src/github.com/gopher-net \
 WORKDIR /go/src/github.com/gopher-net/docker-passthrough-plugin
 # Build
 RUN CGO_ENABLED=0 go install -v
-RUN echo $(find /go/bin)
 
 # Multistage-build this artifact into docker-dind
 FROM docker:dind
