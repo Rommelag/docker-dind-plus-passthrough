@@ -18,6 +18,8 @@ RUN CGO_ENABLED=0 go install -v
 FROM docker:dind
 
 COPY --from=0 /go/bin/docker-passthrough-plugin /usr/local/bin/
+RUN mkdir /etc/docker \
+	&& echo '{"ipv6":true, "fixed-cidr-v6": "fd4b:02f8:9d37:5621::/64"}' > /etc/docker/daemon.json
 
 # … And emulate the original entrypoint / cmd
 ENTRYPOINT ["sh", "-c", "/usr/local/bin/docker-passthrough-plugin & /usr/local/bin/dockerd-entrypoint.sh"]
