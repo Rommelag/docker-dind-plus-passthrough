@@ -1,0 +1,20 @@
+--- dockerd-entrypoint.sh	2018-03-27 09:50:55.173599882 +0200
++++ dockerd-entrypoint_patched.sh	2018-03-27 09:53:02.151455912 +0200
+@@ -4,6 +4,8 @@
+ # no arguments passed
+ # or first arg is `-f` or `--some-option`
+ if [ "$#" -eq 0 -o "${1#-}" != "$1" ]; then
++    #PATCHED: start docker-passthrough-plugin before dockerd
++    nohup /usr/local/bin/docker-passthrough-plugin &
+ 	# add our default arguments
+ 	set -- dockerd \
+ 		--host=unix:///var/run/docker.sock \
+@@ -12,6 +14,8 @@
+ fi
+
+ if [ "$1" = 'dockerd' ]; then
++    #PATCHED: start docker-passthrough-plugin before dockerd
++    nohup /usr/local/bin/docker-passthrough-plugin &
+ 	# if we're running Docker, let's pipe through dind
+ 	# (and we'll run dind explicitly with "sh" since its shebang is /bin/bash)
+ 	set -- sh "$(which dind)" "$@"

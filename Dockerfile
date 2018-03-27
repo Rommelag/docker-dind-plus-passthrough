@@ -18,7 +18,5 @@ RUN CGO_ENABLED=0 go install -v
 FROM docker:dind
 
 COPY --from=0 /go/bin/docker-passthrough-plugin /usr/local/bin/
-
-# … And emulate the original entrypoint / cmd
-ENTRYPOINT ["sh", "-c", "/usr/local/bin/docker-passthrough-plugin & /usr/local/bin/dockerd-entrypoint.sh"]
-CMD sh
+COPY dockerd-entrypoint.patch /tmp/
+RUN patch /usr/local/bin/dockerd-entrypoint.sh /tmp/dockerd-entrypoint.patch
